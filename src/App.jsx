@@ -1,41 +1,18 @@
 import { useState } from "react";
+import { Routes, Route } from "react-router";
 import { initialProducts } from "./data/initialProducts";
-import Header from "./components/Header";
-import FilterBar from "./components/FilterBar";
-import ProductCard from "./components/ProductCard";
-import ProductFormModal from "./components/ProductFormModal";
-import DeleteConfirmModal from "./components/DeleteConfirmModal";
+import AppLayout from "./layouts/AppLayout";
+import DashboardPage from "./pages/DashboardPage";
+import ProductsPage from "./pages/ProductsPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
+import SettingsPage from "./pages/SettingsPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import "./App.css";
 
 export default function App() {
   const [products, setProducts] = useState(initialProducts);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("Semua");
   const [cartCount, setCartCount] = useState(0);
-
-  // State untuk kontrol Pop-up Modal
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null);
-  const [deletingProduct, setDeletingProduct] = useState(null);
-
-  const filteredProducts = products.filter((item) => {
-    const matchesName = item.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "Semua" || item.category === selectedCategory;
-    return matchesName && matchesCategory;
-  });
-
-  function handleOpenAddModal() {
-    setEditingProduct(null);
-    setIsFormOpen(true);
-  }
-
-  function handleOpenEditModal(product) {
-    setEditingProduct(product);
-    setIsFormOpen(true);
-  }
+  const [viewMode, setViewMode] = useState("grid"); // "grid" | "list"
 
   function handleSaveProduct(formData) {
     if (formData.id) {
@@ -47,13 +24,10 @@ export default function App() {
         products.length > 0 ? Math.max(...products.map((p) => p.id)) + 1 : 1;
       setProducts((prev) => [...prev, { ...formData, id: nextId }]);
     }
-    setIsFormOpen(false);
-    setEditingProduct(null);
   }
 
-  function handleConfirmDelete(id) {
+  function handleDeleteProduct(id) {
     setProducts((prev) => prev.filter((item) => item.id !== id));
-    setDeletingProduct(null);
   }
 
   function handleAddToCart(id) {
@@ -67,58 +41,52 @@ export default function App() {
     setCartCount((prev) => prev + 1);
   }
 
+  function handleResetCart() {
+    setCartCount(0);
+  }
+
   return (
-    <div className="app-container">
-      <Header cartCount={cartCount} onOpenAddModal={handleOpenAddModal} />
-
-      <FilterBar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-        totalFiltered={filteredProducts.length}
-      />
-
-      {filteredProducts.length > 0 ? (
-        <main className="product-grid">
-          {filteredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onEdit={handleOpenEditModal}
-              onDelete={(item) => setDeletingProduct(item)}
+    <Routes>
+      <Route path="/" element={<AppLayout cartCount={cartCount} />}>
+        <Route
+          index
+          element={<DashboardPage products={products} cartCount={cartCount} />}
+        />
+        <Route
+          path="products"
+          element={
+            <ProductsPage
+              products={products}
+              viewMode={viewMode}
+              onSaveProduct={handleSaveProduct}
+              onDeleteProduct={handleDeleteProduct}
               onAddToCart={handleAddToCart}
             />
-          ))}
-        </main>
-      ) : (
-        <div className="empty-state">
-          <p>Produk tidak ditemukan untuk kata kunci atau kategori tersebut.</p>
-        </div>
-      )}
-
-      <footer className="store-footer">
-        Menampilkan {filteredProducts.length} dari {products.length} produk
-      </footer>
-
-      {isFormOpen && (
-        <ProductFormModal
-          initialData={editingProduct}
-          onClose={() => {
-            setIsFormOpen(false);
-            setEditingProduct(null);
-          }}
-          onSave={handleSaveProduct}
+          }
         />
-      )}
-
-      {deletingProduct && (
-        <DeleteConfirmModal
-          product={deletingProduct}
-          onCancel={() => setDeletingProduct(null)}
-          onConfirm={handleConfirmDelete}
+        <Route
+          path="products/:id"
+          element={
+            <ProductDetailPage
+              products={products}
+              onAddToCart={handleAddToCart}
+            />
+          }
         />
-      )}
-    </div>
+        <Route
+          path="settings"
+          element={
+            <SettingsPage
+              viewMode={viewMode}
+              onChangeViewMode={setViewMode}
+              cartCount={cartCount}
+              onResetCart={handleResetCart}
+            />
+          }
+        />
+      </Route>
+
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   );
 }
