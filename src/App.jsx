@@ -7,12 +7,11 @@ import ProductsPage from "./pages/ProductsPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import SettingsPage from "./pages/SettingsPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import "./App.css";
 
 export default function App() {
   const [products, setProducts] = useState(initialProducts);
   const [cartCount, setCartCount] = useState(0);
-  const [viewMode, setViewMode] = useState("grid"); // "grid" | "list"
+  const [viewMode, setViewMode] = useState("grid");
 
   function handleSaveProduct(formData) {
     if (formData.id) {
