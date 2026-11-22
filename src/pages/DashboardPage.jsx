@@ -12,43 +12,74 @@ export default function DashboardPage({ products, cartCount }) {
 
   return (
     <section>
-      <div className="page-header">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1>Dashboard Ringkasan Toko</h1>
-          <p className="subtitle">
+          <h1 className="text-2xl font-bold text-slate-900">
+            Dashboard Ringkasan Toko
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
             Pantau statistik inventaris dan navigasi cepat ke katalog produk.
           </p>
         </div>
-        <Link to="/products" className="btn btn-primary">
+        <Link
+          to="/products"
+          className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+        >
           Kelola Produk →
         </Link>
       </div>
 
-      <div className="stats-grid">
-        <div className="stat-card">
-          <span className="stat-label">Total Jenis Produk</span>
-          <strong className="stat-value">{totalProducts}</strong>
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <span className="text-xs font-medium text-slate-500">
+            Total Jenis Produk
+          </span>
+          <strong className="mt-2 block text-2xl font-bold text-slate-900">
+            {totalProducts}
+          </strong>
         </div>
-        <div className="stat-card">
-          <span className="stat-label">Total Unit Stok</span>
-          <strong className="stat-value">{totalStock} unit</strong>
+
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <span className="text-xs font-medium text-slate-500">
+            Total Unit Stok
+          </span>
+          <strong className="mt-2 block text-2xl font-bold text-slate-900">
+            {totalStock} unit
+          </strong>
         </div>
-        <div className="stat-card">
-          <span className="stat-label">Perlu Restock (≤ 4)</span>
-          <strong className="stat-value text-warning">{lowStockCount} produk</strong>
+
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <span className="text-xs font-medium text-slate-500">
+            Perlu Restock (≤ 4)
+          </span>
+          <strong className="mt-2 block text-2xl font-bold text-amber-600">
+            {lowStockCount} produk
+          </strong>
         </div>
-        <div className="stat-card">
-          <span className="stat-label">Item di Keranjang</span>
-          <strong className="stat-value">{cartCount} item</strong>
+
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <span className="text-xs font-medium text-slate-500">
+            Item di Keranjang
+          </span>
+          <strong className="mt-2 block text-2xl font-bold text-slate-900">
+            {cartCount} item
+          </strong>
         </div>
       </div>
 
-      <div className="info-banner">
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <div>
-          <h3>Estimasi Nilai Aset Inventaris</h3>
-          <p className="banner-amount">{formatRupiah(inventoryValue)}</p>
+          <h3 className="text-sm font-semibold text-slate-600">
+            Estimasi Nilai Aset Inventaris
+          </h3>
+          <p className="mt-1 text-2xl font-extrabold text-blue-600">
+            {formatRupiah(inventoryValue)}
+          </p>
         </div>
-        <Link to="/settings" className="btn btn-secondary">
+        <Link
+          to="/settings"
+          className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
+        >
           Atur Tampilan Katalog
         </Link>
       </div>

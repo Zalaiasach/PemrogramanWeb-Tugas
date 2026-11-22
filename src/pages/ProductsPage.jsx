@@ -3,6 +3,7 @@ import FilterBar from "../components/FilterBar";
 import ProductCard from "../components/ProductCard";
 import ProductFormModal from "../components/ProductFormModal";
 import DeleteConfirmModal from "../components/DeleteConfirmModal";
+import Button from "../components/atoms/Button";
 
 export default function ProductsPage({
   products,
@@ -50,16 +51,16 @@ export default function ProductsPage({
 
   return (
     <section>
-      <div className="page-header">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1>Manajemen Produk</h1>
-          <p className="subtitle">
+          <h1 className="text-2xl font-bold text-slate-900">Manajemen Produk</h1>
+          <p className="mt-1 text-sm text-slate-500">
             Kelola daftar produk, harga, stok, dan lihat detail masing-masing item.
           </p>
         </div>
-        <button className="btn btn-primary" onClick={handleOpenAddModal}>
+        <Button variant="primary" onClick={handleOpenAddModal}>
           + Tambah Produk
-        </button>
+        </Button>
       </div>
 
       <FilterBar
@@ -71,7 +72,13 @@ export default function ProductsPage({
       />
 
       {filteredProducts.length > 0 ? (
-        <div className={viewMode === "list" ? "product-list" : "product-grid"}>
+        <div
+          className={
+            viewMode === "list"
+              ? "flex flex-col gap-3.5"
+              : "grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
+          }
+        >
           {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}
@@ -84,12 +91,12 @@ export default function ProductsPage({
           ))}
         </div>
       ) : (
-        <div className="empty-state">
-          <p>Produk tidak ditemukan untuk kata kunci atau kategori tersebut.</p>
+        <div className="rounded-xl border border-dashed border-slate-300 bg-white px-5 py-12 text-center text-sm text-slate-500">
+          Produk tidak ditemukan untuk kata kunci atau kategori tersebut.
         </div>
       )}
 
-      <footer className="store-footer">
+      <footer className="mt-6 text-sm text-slate-500">
         Menampilkan {filteredProducts.length} dari {products.length} produk (Mode:{" "}
         {viewMode.toUpperCase()})
       </footer>
